@@ -3,8 +3,6 @@ services:
   web:
     container_name: ${WEB_HOST}
     image: ${WEB_IMAGE_NAME}
-    env_file:
-      - .env
     depends_on:
       - db
       - pgadmin
@@ -13,19 +11,19 @@ services:
       - "${WEBSOCKET_PORT}:8072"
     volumes:
       - odoo-web-data:/var/lib/odoo
-      - ./config:/etc/odoo
+      - ./:/etc/odoo
       - ./addons:/mnt/extra-addons
-    entrypoint: "/usr/bin/odoo -c /etc/odoo/odoo.conf --dev all"
+    entrypoint: "/usr/bin/odoo -c /etc/odoo/.env --dev all -i base"
   db:
-    container_name: ${DB_HOST}
+    container_name: ${db_host}
     image: ${DB_IMAGE}
     environment:
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_PASSWORD=${DB_PASSWD}
-      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${db_name}
+      - POSTGRES_PASSWORD=${db_password}
+      - POSTGRES_USER=${db_user}
       - PGDATA=/var/lib/postgresql/data/pgdata
     ports:
-      - "${DB_PORT}:5432"
+      - "${db_port}:5432"
     volumes:
       - odoo-db-data:/var/lib/postgresql/data/pgdata
   pgadmin:
@@ -42,4 +40,3 @@ volumes:
   odoo-db-data:
   odoo-web-data:
   pgadmin-data:
-

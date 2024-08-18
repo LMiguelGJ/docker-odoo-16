@@ -1,4 +1,4 @@
 # VS code
 .vscode
-.addons
+.env
 *.code-workspace
